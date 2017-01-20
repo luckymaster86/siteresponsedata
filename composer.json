@@ -1,0 +1,20 @@
+{
+    "name": "luckymaster/url-finder",
+    "description": "find all url in html",
+    "authors": [
+        {
+            "name": "LuckyMaster",
+            "email": "lackymaster@ukr.net"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "symfony/dom-crawler": "^3.2",
+        "symfony/css-selector": "^3.2"
+    },
+    "autoload": {
+    "psr-4": {
+        "LuckyMaster\\PageDataFinder\\": "LuckyMaster\\PageDataFinder\\"
+    }
+}
+}
