@@ -35,19 +35,38 @@ class Finder {
     /*
      * поиск адресов всех фреймов
      */
-    public function findFramesUrls() {
+    public function findFramesSrc() {
+        $result  = []; 
+
+        
+        // для frame
         $crawler = new Crawler($this->getHtml(),'http://www.example.com');
-        $result = [];
         foreach ( $crawler->filter('frame')->each(
                                                 function ($node){
                                                     return $node;
                                                 }
-                                             ) as $url ) {
-            $href = $url->attr('src');
-            if(!in_array($href, $result)) {
-                $result[] = $href;
+                                             ) as $frame ) {
+            $src = $frame->attr('src');
+            if(!in_array($src, $result)) {
+                $result[] = $src;
             }
         }
+        unset($crawler);
+        
+        //для iframe
+        $crawler = new Crawler($this->getHtml(),'http://www.example.com');
+        foreach ( $crawler->filter('iframe')->each(
+                                                function ($node){
+                                                    return $node;
+                                                }
+                                             ) as $frame ) {
+            $src = $frame->attr('src');
+            if(!in_array($src, $result)) {
+                $result[] = $src;
+            }
+        }
+        unset($crawler);
+        
         return $result;
     }
     
@@ -59,11 +78,12 @@ class Finder {
                                                 function ($node){
                                                     return $node;
                                                 }
-                                             ) as $url ) {
-            $href = $url->attr('src');
-            if(!in_array($href, $result)) {
-                $result[] = $href;
-            }
+                                             ) as $script ) {
+            $src = $script->attr('src');
+            $text = $script->text();
+            $hash = md5($text);
+            $textLength = strlen($text);
+            $result[] = ['src' => $src, 'text' => $text, 'hash' => $hash, 'textLength' => $textLength];
         }
         return $result;
     }
