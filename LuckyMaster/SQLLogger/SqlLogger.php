@@ -1,10 +1,5 @@
 <?php
-
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+namespace LuckyMaster\SQLLogger;
 
 /**
  * Description of SqlLogger
@@ -14,17 +9,20 @@
 class SqlLogger {
     private $db;
     
-    public function __construct(PDO $pdo) {
+    public function __construct(\PDO $pdo) {
         $this->db = $pdo;
     }
     
     //добавление данных по ссылкам
     public function logLinks($links){
-        $sql = "INSERT INGNORE INTO url (hash, url, firstPageWhereFound) values (:hash, :url, :firstPageWhereFound);";
+        $sql = "INSERT IGNORE INTO siteLinks(hash, url, firstPageWhereFound) values (:hash, :url, :firstPageWhereFound);";
+        
         $stmt = $this->db->prepare($sql);
+        $this->db->beginTransaction();
         foreach ($links as $link) {
             $stmt->execute([':hash' => $link->hash , ':url' => $link->url, ':firstPageWhereFound' => $link->firstPageWhereFound]);
         }
+        $this->db->commit();
     }
     
 }
