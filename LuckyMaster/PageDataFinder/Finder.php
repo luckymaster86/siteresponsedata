@@ -3,7 +3,7 @@ namespace LuckyMaster\PageDataFinder;
 use Symfony\Component\DomCrawler\Crawler;
 
 /**
- * Description of urlFinder
+ * Description of Finder
  *
  * @author master
  */
@@ -16,7 +16,7 @@ class Finder {
     /*
      * поиск всех ссылок
      */
-    public function findLinksUrls() {
+    public function findLinks() {
         $crawler = new Crawler($this->getHtml(),'http://www.example.com');
         $result = [];
         foreach ( $crawler->filter('a')->each(
@@ -26,7 +26,7 @@ class Finder {
                                              ) as $url ) {
             $href = $url->attr('href');
             if(!in_array($href, $result)) {
-                $link = new \SplObjectStorage();
+                $link = new \stdClass();
                 $link->url = $href;
                 $link->hash = md5($href) . '|' . strlen($href);
                 $result[] = $link;
@@ -39,7 +39,7 @@ class Finder {
     /*
      * поиск адресов всех фреймов
      */
-    public function findFramesSrc() {
+    public function findFrames() {
         $result  = []; 
 
         
@@ -50,10 +50,14 @@ class Finder {
                                                     return $node;
                                                 }
                                              ) as $frame ) {
-            $src = $frame->attr('src');
-            if(!in_array($src, $result)) {
-                $result[] = $src;
-            }
+          
+            
+            
+            
+            $f = new \stdClass();
+            $f->src = $frame->attr('src');
+            $f->hash = md5($f->src) . '|' . strlen($f->src);
+            $result[] = $f;
         }
         unset($crawler);
         
@@ -61,21 +65,24 @@ class Finder {
         $crawler = new Crawler($this->getHtml(),'http://www.example.com');
         foreach ( $crawler->filter('iframe')->each(
                                                 function ($node){
+        
                                                     return $node;
                                                 }
-                                             ) as $frame ) {
-            $src = $frame->attr('src');
-            if(!in_array($src, $result)) {
-                $result[] = $src;
-            }
+                                             ) as $frame ) {                     
+            $f = new \stdClass();
+            $f->src = $frame->attr('src');
+            $f->hash = md5($f->src) . '|' . strlen($f->src);
+            $result[] = $f;
         }
         unset($crawler);
         
         return $result;
     }
     
-    //поиск всех скриптов
-    public function findScriptsSrc() {
+    /*
+     * поиск всех скриптов
+     */
+    public function findScripts() {
         $crawler = new Crawler($this->getHtml(),'http://www.example.com');
         $result = [];
         foreach ( $crawler->filter('script')->each(
@@ -83,11 +90,12 @@ class Finder {
                                                     return $node;
                                                 }
                                              ) as $script ) {
-            $src = $script->attr('src');
-            $text = $script->text();
-            $hash = md5($text);
-            $textLength = strlen($text);
-            $result[] = ['src' => $src, 'text' => $text, 'hash' => $hash, 'textLength' => $textLength];
+            $s = new \stdClass();
+            $s->src = $script->attr('src');
+            $s->text = $script->text();
+            $s->textLength = strlen($s->text);
+            $s->hash = md5($s->src . $s->text) . '|' . strlen($s->src) . '|' . $s->textLength;
+            $result[] = $s;
         }
         return $result;
     }
