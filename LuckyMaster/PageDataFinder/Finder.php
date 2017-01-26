@@ -72,6 +72,11 @@ class Finder {
             $f = new \stdClass();
             $f->src = $frame->attr('src');
             $f->hash = md5($f->src) . '|' . strlen($f->src);
+            
+            if(empty($f->src)){
+                $f->hash = md5(uniqid()) . '|' .  'noSrc';
+            }
+            
             $result[] = $f;
         }
         unset($crawler);
