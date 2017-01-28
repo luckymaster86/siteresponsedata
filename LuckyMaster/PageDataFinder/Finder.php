@@ -18,7 +18,7 @@ class Finder {
      */
     public function findLinks() {
         $crawler = new Crawler($this->getHtml(),'http://www.example.com');
-        $result = [];
+        $result = array();
         foreach ( $crawler->filter('a')->each(
                                                 function ($node){
                                                     return $node;
@@ -40,7 +40,7 @@ class Finder {
      * поиск адресов всех фреймов
      */
     public function findFrames() {
-        $result  = []; 
+        $result  = array(); 
 
         
         // для frame
@@ -89,7 +89,7 @@ class Finder {
      */
     public function findScripts() {
         $crawler = new Crawler($this->getHtml(),'http://www.example.com');
-        $result = [];
+        $result = array();
         foreach ( $crawler->filter('script')->each(
                                                 function ($node){
                                                     return $node;
