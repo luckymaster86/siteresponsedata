@@ -26,7 +26,7 @@ class SqlLogger {
         $stmt = $this->db->prepare($sql);
         $this->db->beginTransaction();
         foreach ($links as $link) {
-            $stmt->execute([':hash' => $link->hash , ':url' => $link->url, ':firstPageWhereFound' => $link->firstPageWhereFound]);
+            $stmt->execute(array(':hash' => $link->hash , ':url' => $link->url, ':firstPageWhereFound' => $link->firstPageWhereFound));
         }
         $this->db->commit();
     }
@@ -44,7 +44,7 @@ class SqlLogger {
         $stmt = $this->db->prepare($sql);
         $this->db->beginTransaction();
         foreach ($scripts as $script) {
-            $stmt->execute([':hash' => $script->hash, ':src' => $script->src, ':text' => $script->text, ':firstPageWhereFound' => $script->firstPageWhereFound]);
+            $stmt->execute(array(':hash' => $script->hash, ':src' => $script->src, ':text' => $script->text, ':firstPageWhereFound' => $script->firstPageWhereFound));
             
         }
         $this->db->commit();
@@ -63,7 +63,7 @@ class SqlLogger {
         $stmt = $this->db->prepare($sql);
         $this->db->beginTransaction();
         foreach ($frames as $frame) {
-            $stmt->execute([':hash' => $frame->hash, ':src' => $frame->src, ':firstPageWhereFound' => $frame->firstPageWhereFound]);
+            $stmt->execute(array(':hash' => $frame->hash, ':src' => $frame->src, ':firstPageWhereFound' => $frame->firstPageWhereFound));
         }
         $this->db->commit();
     }
