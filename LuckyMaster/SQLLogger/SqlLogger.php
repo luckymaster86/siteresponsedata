@@ -67,4 +67,69 @@ class SqlLogger {
         }
         $this->db->commit();
     }
+    
+    /*
+     * добавление данных о img
+     */
+    public function logImgs($images) {
+        if(empty($images)){
+            return;
+        }
+        
+        $sql = "INSERT IGNORE INTO siteImgs(hash, src, firstPageWhereFound) values (:hash, :src, :firstPageWhereFound)";
+        
+        $stmt = $this->db->prepare($sql);
+        $this->db->beginTransaction();
+        foreach ($images as $img) {
+            $stmt->execute(array(':hash' => $img->hash,
+                                 ':src' => $img->src,
+                                 ':firstPageWhereFound' => $img->firstPageWhereFound));
+        }
+        $this->db->commit();
+    }
+    
+    /*
+     * добавление данных о embed
+     */
+    public function logEmbeds($embeds) {
+        if(empty($embeds)){
+            return;
+        }
+        
+        $sql = "INSERT IGNORE INTO siteEmbeds(hash, src, type, pluginspage, firstPageWhereFound) values (:hash, :src, :type, :pluginspage, :firstPageWhereFound)";
+        
+        $stmt = $this->db->prepare($sql);
+        $this->db->beginTransaction();
+        foreach ($embeds as $emb) {
+            $stmt->execute(array(':hash' => $emb->hash,
+                                 ':src' => $emb->src,
+                                 ':type' => $emb->type,
+                                 ':pluginspage' => $emb->pluginspage,
+                                 ':firstPageWhereFound' => $emb->firstPageWhereFound));
+        }
+        $this->db->commit();
+    }
+    
+    
+    /*
+     * добавление данных о object
+     */
+    public function logObjects($objects) {
+        if(empty($objects)){
+            return;
+        }
+        
+        $sql = "INSERT IGNORE INTO siteObjects(hash, data, type, firstPageWhereFound) values (:hash, :data, :type, :firstPageWhereFound)";
+        
+        $stmt = $this->db->prepare($sql);
+        $this->db->beginTransaction();
+        foreach ($objects as $obj) {
+            $stmt->execute(array( ':hash' => $obj->hash,
+                                  ':data' => $obj->data,
+                                  ':type' => $obj->type,
+                                  ':firstPageWhereFound' => $obj->firstPageWhereFound));
+        }
+        $this->db->commit();
+    }
+        
 }

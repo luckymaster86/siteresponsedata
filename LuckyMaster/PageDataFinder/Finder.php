@@ -105,6 +105,69 @@ class Finder {
         return $result;
     }
 
+    /*
+     * поиск всех картинок
+     */
+    public function findImgs() {
+        $crawler = new Crawler($this->getHtml(),'http://www.example.com');
+        $result = array();
+        foreach ( $crawler->filter('img')->each(
+                                                function ($node){
+                                                    return $node;
+                                                }
+                                             ) as $img ) {
+            $i = new \stdClass();
+            $i->src = $img->attr('src');
+            $i->hash = md5($i->src) . '|' . strlen($i->src) ;
+            $result[] = $i;
+        }
+        return $result;
+    }
+    
+
+    /*
+     * поиск всех embed
+     */
+    public function findEmbeds() {
+        $crawler = new Crawler($this->getHtml(),'http://www.example.com');
+        $result = array();
+        foreach ( $crawler->filter('embed')->each(
+                                                function ($node){
+                                                    return $node;
+                                                }
+                                             ) as $emb ) {
+            $e = new \stdClass();
+            $e->src = $emb->attr('src');
+            $e->type = $emb->attr('type');
+            $e->pluginspage = $emb->attr('pluginspage');
+            $e->hash = md5($e->src . $e->type . $e->pluginspage) . '|' . strlen($e->src . $e->type . $e->pluginspage) ;
+            $result[] = $e;
+        }
+        return $result;
+    }
+    
+
+    /*
+     * поиск всех object
+     */
+    public function findObjects() {
+        $crawler = new Crawler($this->getHtml(),'http://www.example.com');
+        $result = array();
+        foreach ( $crawler->filter('object')->each(
+                                                function ($node){
+                                                    return $node;
+                                                }
+                                             ) as $object ) {
+            $o = new \stdClass();
+            
+            $o->data = $object->attr('data');
+            $o->type = $object->attr('type');
+            $o->hash = md5( $o->data . $o->type) . '|' . strlen($o->data . $o->type) ;
+            $result[] = $o;
+        }
+        return $result;
+    }
+    
     
     private function getHtml() {
         return $this->html;
